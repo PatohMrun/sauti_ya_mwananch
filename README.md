@@ -1,37 +1,35 @@
-# Sauti ya Mwananchi — Motion Graphic Video
+# Vaultline Solutions — Mazingira Day Ad
 
-A ~14 second promo video built with [Remotion](https://www.remotion.dev) (React → MP4).
+A vertical (1080×1920, 30 fps, ~17 s) motion graphic ad built with
+[Remotion](https://www.remotion.dev), based on the Mazingira Day 2026 flyer.
+It suits Reels, TikTok, Shorts and WhatsApp Status.
 
 ## Scenes
 
 | # | Scene | What happens |
 |---|-------|--------------|
-| 1 | Intro | Animated sound-wave bars, word-by-word title reveal, subtitle |
-| 2 | Tagline | Each sentence of the tagline slides in, with colour-coded first words |
-| 3 | Pillars | Three cards with icons spring up ("Speak Up / Be Heard / Drive Change") |
-| 4 | Call to action | Pulsing rings, CTA headline, URL pill, logo lock-up |
+| 1 | Logo | Vaultline logo pops in with blur and ripple rings |
+| 2 | Greeting | "Happy" letter-spacing collapse, "Mazingira Day" mask reveal, year counts up to 2026 |
+| 3 | Message | Message reveals word by word, and the hand holding the seedling rises in and gently bobs |
+| 4 | Date | "10" slams in with a shake, "OCT" settles, coloured network cables sweep in |
+| 5 | Outro | Sign-off, pulsing **Reach Us** button, WhatsApp/phone number |
 
-Two compositions share the same scenes:
-
-- `SautiPromo` — 1920×1080 (YouTube, presentations)
-- `SautiPromoVertical` — 1080×1920 (Reels, TikTok, WhatsApp Status)
+The drifting contour-line background and the floating leaves run across all scenes.
 
 ## Usage
 
 ```bash
 npm install
-npm run dev              # open Remotion Studio to preview and edit
-npm run render           # out/sauti-promo.mp4
-npm run render:vertical  # out/sauti-promo-vertical.mp4
-npm run still            # out/thumbnail.png
+npm run dev     # Remotion Studio: preview and edit props live
+npm run render  # out/mazingira-ad.mp4
+npm run still   # out/thumbnail.png
 ```
 
 ## Customising
 
-All text and the accent colour are props defined in `src/schema.ts`
-(`defaultPromoProps`). You can edit them there, or live in the Studio's
-props panel.
-
-- Scene lengths: `SCENES` in `src/Promo.tsx` (in frames, 30 fps)
-- Palette: `colors` in `src/theme.ts`
-- Fonts: Poppins (OFL) is bundled in `public/fonts`, so renders work offline
+- Text, date and phone number: `defaultAdProps` in `src/schema.ts` (also editable in the Studio props panel)
+- Scene lengths: `SCENES` in `src/Ad.tsx`
+- Colours: `src/theme.ts`
+- Images: `public/img/logo.png` and `public/img/hand-plant.png` were cut out of the flyer.
+  Replace `logo.png` with a high-resolution transparent PNG for a sharper logo.
+- Font: Outfit (OFL), bundled in `public/fonts` so renders work offline

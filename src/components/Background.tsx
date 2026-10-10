@@ -1,38 +1,35 @@
-import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from "remotion";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig } from "remotion";
 import { colors } from "../theme";
 
-// Slowly drifting gradient blobs that sit behind every scene.
+// Cream canvas with slowly drifting contour lines, echoing the flyer's pattern.
 export const Background: React.FC = () => {
   const frame = useCurrentFrame();
   const { width, height } = useVideoConfig();
-  const t = frame / 30;
-  const size = Math.max(width, height);
+  const lines = 16;
+  const step = height / lines;
 
-  const blob = (x: number, y: number, color: string, scale: number) => (
-    <div
-      style={{
-        position: "absolute",
-        left: x - (size * scale) / 2,
-        top: y - (size * scale) / 2,
-        width: size * scale,
-        height: size * scale,
-        borderRadius: "50%",
-        background: `radial-gradient(circle, ${color} 0%, transparent 65%)`,
-        opacity: 0.35,
-      }}
-    />
-  );
+  const path = (i: number) => {
+    const baseY = i * step + step / 2;
+    const phase = frame / 70 + i * 0.7;
+    const amp = 40 + 25 * Math.sin(i * 1.3);
+    let d = `M -50 ${baseY}`;
+    for (let x = -50; x <= width + 50; x += 30) {
+      const y = baseY + amp * Math.sin(x / 210 + phase) + 18 * Math.cos(x / 95 - phase * 1.4);
+      d += ` L ${x} ${y.toFixed(1)}`;
+    }
+    return d;
+  };
 
   return (
-    <AbsoluteFill style={{ backgroundColor: colors.bg, overflow: "hidden" }}>
-      {blob(width * (0.2 + 0.05 * Math.sin(t * 0.6)), height * (0.3 + 0.05 * Math.cos(t * 0.5)), colors.green, 0.9)}
-      {blob(width * (0.85 + 0.04 * Math.cos(t * 0.4)), height * (0.8 + 0.05 * Math.sin(t * 0.7)), colors.bgAlt, 1.1)}
-      {blob(width * (0.75 + 0.05 * Math.sin(t * 0.3)), height * (0.15 + 0.04 * Math.cos(t * 0.6)), colors.red, 0.5)}
+    <AbsoluteFill style={{ backgroundColor: colors.cream }}>
+      <svg width={width} height={height} style={{ position: "absolute" }}>
+        {Array.from({ length: lines }).map((_, i) => (
+          <path key={i} d={path(i)} fill="none" stroke={colors.line} strokeWidth={22} strokeLinecap="round" opacity={0.55} />
+        ))}
+      </svg>
       <AbsoluteFill
         style={{
-          backgroundImage: `radial-gradient(${colors.white}14 1px, transparent 1px)`,
-          backgroundSize: "36px 36px",
-          opacity: interpolate(frame, [0, 30], [0, 1], { extrapolateRight: "clamp" }),
+          background: `radial-gradient(circle at 50% 55%, rgba(78,154,47,0.10) 0%, transparent 55%)`,
         }}
       />
     </AbsoluteFill>

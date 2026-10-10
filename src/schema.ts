@@ -1,30 +1,31 @@
 import { z } from "zod";
-import { zColor } from "@remotion/zod-types";
 
-export const promoSchema = z.object({
-  title: z.string(),
-  subtitle: z.string(),
-  tagline: z.string(),
-  pillars: z
-    .array(z.object({ heading: z.string(), body: z.string() }))
-    .length(3),
-  cta: z.string(),
-  url: z.string(),
-  accentColor: zColor(),
+export const adSchema = z.object({
+  company: z.string(),
+  greetingTop: z.string(),
+  greetingMain: z.string(),
+  greetingDay: z.string(),
+  year: z.number().int(),
+  message: z.string(),
+  signOff: z.string(),
+  day: z.string(),
+  month: z.string(),
+  ctaLabel: z.string(),
+  phone: z.string(),
 });
 
-export type PromoProps = z.infer<typeof promoSchema>;
+export type AdProps = z.infer<typeof adSchema>;
 
-export const defaultPromoProps: PromoProps = {
-  title: "Sauti ya Mwananchi",
-  subtitle: "The Voice of the Citizen",
-  tagline: "Your voice. Your community. Your future.",
-  pillars: [
-    { heading: "Speak Up", body: "Share the issues that matter to you" },
-    { heading: "Be Heard", body: "Reach leaders and decision makers" },
-    { heading: "Drive Change", body: "Track action in your community" },
-  ],
-  cta: "Join the conversation",
-  url: "sautiyamwananchi.org",
-  accentColor: "#F5B82E",
+export const defaultAdProps: AdProps = {
+  company: "Vaultline Solutions",
+  greetingTop: "Happy",
+  greetingMain: "Mazingira",
+  greetingDay: "Day",
+  year: 2026,
+  message: "True connectivity means caring for the environment that sustains us.",
+  signOff: "Happy Mazingira Day from",
+  day: "10",
+  month: "OCT",
+  ctaLabel: "Reach Us",
+  phone: "+254 745 838 420",
 };
