@@ -114,7 +114,7 @@ def music(duration=17.2, bpm=120):
     return mix / np.max(np.abs(mix)) * 0.8
 
 
-def whoosh(seconds=0.7):
+def whoosh(seconds=0.5):
     t = t_axis(seconds)
     noise = rng.standard_normal(len(t))
     env = np.sin(np.pi * t / seconds) ** 2
@@ -122,7 +122,7 @@ def whoosh(seconds=0.7):
     out = np.empty_like(noise)
     acc = 0.0
     for i, v in enumerate(noise):
-        a = 0.03 + 0.25 * env[i]
+        a = 0.08 + 0.5 * env[i]
         acc += a * (v - acc)
         out[i] = acc
     out *= env
@@ -133,17 +133,19 @@ def whoosh(seconds=0.7):
 
 def pop():
     t = t_axis(0.25)
-    f = 300 + 700 * np.exp(-t * 40)
-    s = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 18)
+    t = t_axis(0.12)
+    f = 900 + 900 * np.exp(-t * 60)
+    s = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 45)
     return np.stack([s, s], axis=1) * 0.6
 
 
 def impact():
-    t = t_axis(1.4)
-    f = 35 + 120 * np.exp(-t * 12)
-    boom = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 3.5)
-    crack = lowpass(rng.standard_normal(len(t)), 0.35) * np.exp(-t * 20) * 0.6
-    s = boom + crack
+    t = t_axis(0.8)
+    f = 90 + 90 * np.exp(-t * 25)
+    thud = np.sin(2 * np.pi * np.cumsum(f) / SR) * np.exp(-t * 14)
+    noise = rng.standard_normal(len(t))
+    shimmer = (noise - lowpass(noise, 0.3)) * np.exp(-t * 6) * 0.25
+    s = thud + shimmer
     return np.stack([s, s], axis=1) / np.max(np.abs(s)) * 0.8
 
 

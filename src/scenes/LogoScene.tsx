@@ -1,7 +1,8 @@
 import { AbsoluteFill, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import { colors } from "../theme";
 
-export const LogoScene: React.FC = () => {
+// exitAt: frame by which the logo has fully animated out, so it never overlaps the next scene.
+export const LogoScene: React.FC<{ exitAt: number }> = ({ exitAt }) => {
   const frame = useCurrentFrame();
   const { fps, width } = useVideoConfig();
   const s = width / 1080;
@@ -9,8 +10,18 @@ export const LogoScene: React.FC = () => {
   const pop = spring({ frame: frame - 6, fps, config: { damping: 11, mass: 0.8 } });
   const blur = interpolate(frame, [6, 24], [16, 0], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
 
+  const exit = interpolate(frame, [exitAt - 14, exitAt], [0, 1], { extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+
   return (
-    <AbsoluteFill style={{ justifyContent: "center", alignItems: "center" }}>
+    <AbsoluteFill
+      style={{
+        justifyContent: "center",
+        alignItems: "center",
+        opacity: 1 - exit,
+        transform: `scale(${1 - 0.15 * exit})`,
+        filter: `blur(${exit * 10}px)`,
+      }}
+    >
       {[0, 15, 30].map((o) => {
         const t = ((frame + o) % 45) / 45;
         return (

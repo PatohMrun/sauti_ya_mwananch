@@ -41,17 +41,17 @@ export const Ad: React.FC<AdProps> = (props) => {
   return (
     <AbsoluteFill>
       <Audio src={staticFile("audio/music.wav")} volume={0.85} />
-      <Sfx at={starts.logo + 4} src="pop.wav" volume={0.7} />
+      <Sfx at={starts.logo + 4} src="pop.wav" volume={0.25} />
       {[starts.greeting, starts.message, starts.date, starts.outro].map((f) => (
-        <Sfx key={f} at={f - 6} src="whoosh.wav" volume={0.45} />
+        <Sfx key={f} at={f - 4} src="whoosh.wav" volume={0.18} />
       ))}
-      <Sfx at={starts.date + 6} src="impact.wav" volume={0.8} />
-      <Sfx at={starts.outro + 34} src="chime.wav" volume={0.6} />
+      <Sfx at={starts.date + 6} src="impact.wav" volume={0.3} />
+      <Sfx at={starts.outro + 34} src="chime.wav" volume={0.3} />
       <Background />
       <FloatingLeaves />
       <TransitionSeries>
         <TransitionSeries.Sequence durationInFrames={SCENES.logo}>
-          <LogoScene />
+          <LogoScene exitAt={SCENES.logo - TRANSITION} />
         </TransitionSeries.Sequence>
         <TransitionSeries.Transition presentation={fade()} timing={timing} />
         <TransitionSeries.Sequence durationInFrames={SCENES.greeting}>
