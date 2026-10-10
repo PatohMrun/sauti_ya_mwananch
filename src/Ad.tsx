@@ -1,4 +1,4 @@
-import { AbsoluteFill } from "remotion";
+import { AbsoluteFill, Audio, Sequence, staticFile } from "remotion";
 import { TransitionSeries, springTiming } from "@remotion/transitions";
 import { fade } from "@remotion/transitions/fade";
 import { slide } from "@remotion/transitions/slide";
@@ -18,11 +18,35 @@ export const TRANSITION = 16;
 export const AD_DURATION =
   Object.values(SCENES).reduce((a, b) => a + b, 0) - TRANSITION * (Object.keys(SCENES).length - 1);
 
+// Frame at which each scene starts, accounting for overlapping transitions.
+const starts = (() => {
+  const out: Record<keyof typeof SCENES, number> = { logo: 0, greeting: 0, message: 0, date: 0, outro: 0 };
+  let t = 0;
+  for (const key of Object.keys(SCENES) as (keyof typeof SCENES)[]) {
+    out[key] = t;
+    t += SCENES[key] - TRANSITION;
+  }
+  return out;
+})();
+
+const Sfx: React.FC<{ at: number; src: string; volume?: number }> = ({ at, src, volume = 1 }) => (
+  <Sequence from={Math.max(0, at)} layout="none">
+    <Audio src={staticFile(`audio/${src}`)} volume={volume} />
+  </Sequence>
+);
+
 export const Ad: React.FC<AdProps> = (props) => {
   const timing = springTiming({ config: { damping: 200 }, durationInFrames: TRANSITION });
 
   return (
     <AbsoluteFill>
+      <Audio src={staticFile("audio/music.wav")} volume={0.85} />
+      <Sfx at={starts.logo + 4} src="pop.wav" volume={0.7} />
+      {[starts.greeting, starts.message, starts.date, starts.outro].map((f) => (
+        <Sfx key={f} at={f - 6} src="whoosh.wav" volume={0.45} />
+      ))}
+      <Sfx at={starts.date + 6} src="impact.wav" volume={0.8} />
+      <Sfx at={starts.outro + 34} src="chime.wav" volume={0.6} />
       <Background />
       <FloatingLeaves />
       <TransitionSeries>
